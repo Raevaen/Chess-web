@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.game-info {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #555;
+}
+
+#current-player {
+    font-weight: bold;
+    color: #667eea;
+}
+
+#chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    gap: 0;
+    margin: 0 auto 20px;
+    border: 3px solid #333;
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.square.light {
+    background-color: #f0d9b5;
+}
+
+.square.dark {
+    background-color: #b58863;
+}
+
+.square.selected {
+    background-color: #7fc97f;
+}
+
+.square.possible-move {
+    background-color: #ffff99;
+}
+
+.square:hover {
+    opacity: 0.8;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+#reset-btn {
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#reset-btn:hover {
+    background-color: #5568d3;
+}
