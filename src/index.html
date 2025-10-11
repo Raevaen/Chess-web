@@ -1,22 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>My Chess</title>
-  <style>body{font-family: monospace;}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Chess Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h3>Our Chess (local 2-player)</h3>
-  <div>
-    <button id="newGameBtn">New Game</button>
-    <span id="turnIndicator">Turn: White</span>
-  </div>
-  <p>Click a piece to select it, then click destination square. Pieces are shown as [WK],[WQ],[WN],[WB],[WR],[Wp] and [BK],... [Bp].</p>
+    <div class="container">
+        <h1>My Chess Game</h1>
+        <div class="game-info">
+            <p>Current Player: <span id="current-player">White</span></p>
+        </div>
+        
+        <div id="chessboard"></div>
 
-  <table id="board" border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
-  </table>
-
-<script src="index.js">
-</script>
+        <div class="controls">
+            <button id="reset-btn">New Game</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
