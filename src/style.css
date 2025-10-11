@@ -1,0 +1,158 @@
+:root {
+    --background-gradient: linear-gradient(135deg, #333 0%, #555 100%);
+    --light-cell-color: #f0d9b5;
+    --dark-cell-color: #b58863;
+    --highlight-color: #7fc97f;
+    --board-border-color: #333;
+    --button-bg-color: #667eea;
+    --current-player-color: #667eea;
+    --button-hover-bg-color: #5568d3;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--background-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.game-info {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #555;
+}
+
+#current-player {
+    font-weight: bold;
+    color: var(--current-player-color);
+}
+
+#chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    gap: 0;
+    margin: 0 auto 20px;
+    border: 3px solid #333;
+}
+
+.cell {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cell img {
+    pointer-events: none;
+    width: 45px;
+    height: 60px;
+}
+
+.cell.light {
+    background-color: var(--light-cell-color);
+}
+
+.cell.dark {
+    background-color: var(--dark-cell-color);
+}
+
+.cell.selected {
+    background-color: var(--highlight-color);
+}
+
+.cell.possible-move {
+    position: relative;
+}
+
+.cell.possible-move::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+}
+
+.cell:hover {
+    opacity: 0.8;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+#reset-btn {
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: var(--button-bg-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#reset-btn:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+.promotion-tooltip {
+    display: flex;
+    gap: 8px;
+    background: #fefefe;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 6px 8px;
+    position: absolute;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  
+  .promotion-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  
+  .promotion-option:hover {
+    transform: scale(1.1);
+    background-color: #eee;
+  }
+  
+  .promotion-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+  
