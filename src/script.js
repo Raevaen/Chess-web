@@ -133,53 +133,60 @@ const PIECE_IMG = {
   /* ===========================
      Click handling - selection & moves
      =========================== */
-var debugLegalMoves = 'multi'; // for debugging
-  function onBoardClick(ev){
-    // find the clicked cell (may be img or div)
-    let target = ev.target;
-    while(target && target !== boardEl && !target.classList.contains('cell')){
-      target = target.parentElement;
-    }
-    if(!target || target === boardEl) return;
-    const r = parseInt(target.dataset.r, 10);
-    const c = parseInt(target.dataset.c, 10);
-    if(Number.isNaN(r) || Number.isNaN(c)) return;
-  
-    const piece = board[r][c];
-  
-    if(selected){
-      // attempt to move selected -> (r,c)
-      const from = {r: selected.r, c: selected.c};
-      const legalMoves = generateLegalMovesForSquare(from.r, from.c);
-      const move = legalMoves.find(m => m.r === r && m.c === c);
-      if(move){
-        performMove(from, {r,c}, move);
-        selected = null;
-        renderBoard();
-        postMoveChecks();
+     function onBoardClick(ev){
+      // find the clicked cell (may be img or div)
+      let target = ev.target;
+      while(target && target !== boardEl && !target.classList.contains('cell')){
+        target = target.parentElement;
+      }
+      if(!target || target === boardEl) return;
+      const r = parseInt(target.dataset.r, 10);
+      const c = parseInt(target.dataset.c, 10);
+      if(Number.isNaN(r) || Number.isNaN(c)) return;
+    
+      const piece = board[r][c];
+    
+      if(selected){
+        // If user clicked the same selected square -> deselect
+        if(selected.r === r && selected.c === c){
+          selected = null;
+          renderBoard();
+          return;
+        }
+    
+        // attempt to move selected -> (r,c)
+        const from = {r: selected.r, c: selected.c};
+        const legalMoves = generateLegalMovesForSquare(from.r, from.c);
+        const move = legalMoves.find(m => m.r === r && m.c === c);
+        if(move){
+          performMove(from, {r,c}, move);
+          selected = null;
+          renderBoard();
+          postMoveChecks();
+        } else {
+          // If clicked own piece, change selection and highlight its legal moves
+          if(piece && piece.color === turn){
+            selected = {r,c};
+            renderBoard();
+            const newLegalMoves = generateLegalMovesForSquare(r, c);
+            highlightLegalMoves(newLegalMoves);
+          } else {
+            // invalid target, deselect
+            selected = null;
+            renderBoard();
+          }
+        }
       } else {
-        // If clicked own piece, change selection
+        // no selection -> select if player's piece
         if(piece && piece.color === turn){
           selected = {r,c};
-        } else {
-          // invalid target, deselect
-          selected = null;
+          renderBoard();
+          const legalMoves = generateLegalMovesForSquare(r, c);
+          highlightLegalMoves(legalMoves);
         }
-        renderBoard();
-      }
-    } else {
-      // no selection -> select if player's piece
-      if(piece && piece.color === turn){
-        selected = {r,c};
-        renderBoard();
-
-        const legalMoves = generateLegalMovesForSquare(r, c);
-        debugLegalMoves = legalMoves; // for debugging
-        highlightLegalMoves(legalMoves);
       }
     }
-  }
-  
+      
   /* ===========================
      Move generation & validation
      =========================== */
