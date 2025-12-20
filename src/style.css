@@ -155,4 +155,105 @@ h1 {
     height: 40px;
     object-fit: contain;
   }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .game-info {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    #chessboard {
+        grid-template-columns: repeat(8, 40px);
+        grid-template-rows: repeat(8, 40px);
+        border: 2px solid #333;
+    }
+
+    .cell {
+        width: 40px;
+        height: 40px;
+        font-size: 28px;
+    }
+
+    .cell img {
+        width: 30px;
+        height: 40px;
+    }
+
+    #reset-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .promotion-tooltip {
+        gap: 6px;
+        padding: 4px 6px;
+    }
+
+    .promotion-icon {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .game-info {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    #chessboard {
+        grid-template-columns: repeat(8, 35px);
+        grid-template-rows: repeat(8, 35px);
+        border: 2px solid #333;
+    }
+
+    .cell {
+        width: 35px;
+        height: 35px;
+        font-size: 24px;
+    }
+
+    .cell img {
+        width: 26px;
+        height: 35px;
+    }
+
+    #reset-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .promotion-tooltip {
+        gap: 4px;
+        padding: 3px 4px;
+    }
+
+    .promotion-icon {
+        width: 25px;
+        height: 25px;
+    }
+}
   
