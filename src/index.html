@@ -11,6 +11,7 @@
         <h1>My Chess Game</h1>
         <div class="game-info">
             <p>Current Player: <span id="current-player">White</span></p>
+            <p id="ai-status" class="hidden">AI is thinking...</p>
         </div>
         
         <div id="chessboard"></div>
@@ -18,7 +19,23 @@
         <div class="controls">
             <button id="reset-btn">New Game</button>
         </div>
+        
+        <div class="ai-settings">
+            <h3>AI Settings</h3>
+            <div class="setting-row">
+                <input type="checkbox" id="ai-toggle">
+                <label for="ai-toggle">Play vs AI (Black)</label>
+            </div>
+            <div class="setting-row" id="api-key-container" style="display: none;">
+                <label for="ai-api-key">Gemini API Key:</label>
+                <input type="password" id="ai-api-key" placeholder="Enter API Key" autocomplete="off">
+            </div>
+            <p class="api-help" id="api-help-text" style="display: none;">
+                Get a free key from <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>.
+            </p>
+        </div>
     </div>
+    <script src="ai.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

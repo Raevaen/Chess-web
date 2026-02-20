@@ -33,6 +33,9 @@ const PIECE_IMG = {
   let castleRights = { W: {K:true, Q:true}, B: {K:true, Q:true} };
   let halfmoveClock = 0;
   let fullmoveNumber = 1;
+  let aiEnabled = false;
+  let apiKey = '';
+  let isAITurn = false;
   
   /* ===========================
      Initialization / Rendering
@@ -40,6 +43,27 @@ const PIECE_IMG = {
   
   resetBtn.addEventListener('click', startNewGame);
   boardEl.addEventListener('click', onBoardClick);
+  
+  const aiToggle = document.getElementById('ai-toggle');
+  aiToggle.checked = false; // Ensure it's unchecked on page reload
+  const apiKeyContainer = document.getElementById('api-key-container');
+  const apiKeyInput = document.getElementById('ai-api-key');
+  const apiHelpText = document.getElementById('api-help-text');
+  
+  aiToggle.addEventListener('change', (e) => {
+      aiEnabled = e.target.checked;
+      apiKeyContainer.style.display = aiEnabled ? 'flex' : 'none';
+      apiHelpText.style.display = aiEnabled ? 'block' : 'none';
+      
+      // If AI was enabled mid-game and it's Black's turn, trigger it
+      if (aiEnabled && turn === 'B' && !isAITurn) {
+          triggerAITurn();
+      }
+  });
+
+  apiKeyInput.addEventListener('input', (e) => {
+      apiKey = e.target.value.trim();
+  });
   
   startNewGame();
   
@@ -51,6 +75,8 @@ const PIECE_IMG = {
     castleRights = { W: {K:true, Q:true}, B: {K:true, Q:true} };
     halfmoveClock = 0;
     fullmoveNumber = 1;
+    isAITurn = false;
+    document.getElementById('ai-status').classList.add('hidden');
     renderBoard();
     updateCurrentPlayer();
   }
@@ -134,6 +160,7 @@ const PIECE_IMG = {
      Click handling - selection & moves
      =========================== */
      function onBoardClick(ev){
+      if(isAITurn || (aiEnabled && turn === 'B')) return; // ignore clicks during AI turn
       // find the clicked cell (may be img or div)
       let target = ev.target;
       while(target && target !== boardEl && !target.classList.contains('cell')){
@@ -471,14 +498,45 @@ const PIECE_IMG = {
       const winner = (turn === 'W') ? 'Black' : 'White';
       alert(`Checkmate — ${winner} wins.`);
       // do not auto-reset; user can press New Game
+      document.getElementById('ai-status').classList.add('hidden');
     } else if(!inCheck && !anyMoves){
       alert('Stalemate — draw.');
+      document.getElementById('ai-status').classList.add('hidden');
     } else if(inCheck){
       // mark check indicator in small visual way via current player text
       currentPlayerEl.textContent = `${turn === 'W' ? 'White' : 'Black'} (CHECK)`;
+      
+      if (aiEnabled && turn === 'B') {
+          triggerAITurn();
+      }
     } else {
       updateCurrentPlayer();
+      if (aiEnabled && turn === 'B') {
+          triggerAITurn();
+      }
     }
+  }
+  
+  async function triggerAITurn() {
+      if (!aiEnabled || turn !== 'B' || isAITurn) return;
+      isAITurn = true;
+      document.getElementById('ai-status').classList.remove('hidden');
+      
+      const legalMovesForBlack = getAllLegalMoves('B');
+      
+      try {
+          const matchingMove = await fetchAIMove(apiKey, legalMovesForBlack, board);
+          if (matchingMove) {
+              performMove(matchingMove.from, {r: matchingMove.r, c: matchingMove.c}, matchingMove);
+              renderBoard();
+              postMoveChecks();
+          }
+      } catch (err) {
+          alert("AI Error: " + err.message + "\nPlease check your API Key over in AI Settings.");
+      } finally {
+          isAITurn = false;
+          document.getElementById('ai-status').classList.add('hidden');
+      }
   }
   
   /* ===========================
@@ -629,6 +687,27 @@ const PIECE_IMG = {
     }
     turn = oldTurn;
     return found;
+  }
+  
+  function getAllLegalMoves(color) {
+      const oldTurn = turn;
+      turn = color;
+      const allMoves = [];
+      for(let r=0;r<8;r++){
+          for(let c=0;c<8;c++){
+              const p = board[r][c];
+              if(p && p.color === color){
+                  const moves = generateLegalMovesForSquare(r,c);
+                  moves.forEach(m => {
+                      // Attach the 'from' coordinate directly to the move object for easy serialization
+                      m.from = {r, c};
+                      allMoves.push(m);
+                  });
+              }
+          }
+      }
+      turn = oldTurn;
+      return allMoves;
   }
   
   function updateCurrentPlayer(){
