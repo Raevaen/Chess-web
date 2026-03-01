@@ -335,6 +335,18 @@ const PIECE_IMG = {
     if(!piece || piece.color !== turn) return [];
     const pseudo = generatePseudoLegalMoves(r,c);
     const legal = pseudo.filter(move => {
+      // Castling has extra restrictions beyond just the final position
+      if(move.castle){
+        // 1. King must not currently be in check
+        if(isKingInCheckOnBoard(board, piece.color, { enPassantTarget, castleRights })) return false;
+        // 2. King must not pass through an attacked square
+        // Kingside: king passes through c=5; Queenside: king passes through c=3
+        const intermediateCol = (move.castle === 'K') ? 5 : 3;
+        const intermediateState = cloneGameState();
+        intermediateState.board[r][intermediateCol] = intermediateState.board[r][c];
+        intermediateState.board[r][c] = null;
+        if(isKingInCheckOnBoard(intermediateState.board, piece.color, intermediateState)) return false;
+      }
       const copy = cloneGameState();
       applyMoveOnBoard(copy.board, {r,c}, {r:move.r, c:move.c}, move, copy);
       // If own king still exists and is not in check -> legal
